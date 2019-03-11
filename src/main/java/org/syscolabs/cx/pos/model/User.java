@@ -1,21 +1,26 @@
 package org.syscolabs.cx.pos.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 public class User {
-
-    private long id;
+    @Id
+    private ObjectId _id;
     private String username;
     private String password;
-    private long salary;
-    private int age;
 
-    public long getId() {
-        return id;
+    public User(String username) {
+        this.username = username;
     }
 
-    public void setId(long id) {
-        this.id = id;
+
+    public ObjectId getId() {
+        return _id;
+    }
+
+    public void setId(ObjectId id) {
+        this._id = id;
     }
 
     public String getUsername() {
@@ -32,21 +37,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public long getSalary() {
-        return salary;
-    }
-
-    public void setSalary(long salary) {
-        this.salary = salary;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 }

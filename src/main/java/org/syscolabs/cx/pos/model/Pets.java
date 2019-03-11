@@ -3,12 +3,15 @@ package org.syscolabs.cx.pos.model;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
+
 public class Pets {
     @Id
     public ObjectId _id;
 
     public String name;
     public String species;
+    @NotNull(message = "Ohh where is breed man???")
     public String breed;
 
     // Constructors
@@ -33,4 +36,9 @@ public class Pets {
 
     public String getBreed() { return breed; }
     public void setBreed(String breed) { this.breed = breed; }
+
+    @Override
+    public String toString() {
+        return String.format("name : %s, species : %s\n", this.name, this.species);
+    }
 }
