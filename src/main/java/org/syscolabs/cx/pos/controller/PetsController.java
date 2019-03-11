@@ -23,7 +23,7 @@ public class PetsController {
         return repository.findAll();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public Pets getPetById(@PathVariable("id") ObjectId id) {
         return repository.findBy_id(id);
     }

@@ -5,12 +5,14 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -22,16 +24,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
+import org.syscolabs.cx.pos.SyscoPosApplication;
 import org.syscolabs.cx.pos.model.Pets;
 import org.syscolabs.cx.pos.repository.PetsRepository;
-
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = SyscoPosApplication.class)
 @WebAppConfiguration
 public class PetsControllerTest {
 
@@ -45,21 +46,24 @@ public class PetsControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
     @Before
     public void setup() throws Exception {
 
 
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();// Standalone context
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();// Standalone context
         // mockMvc = MockMvcBuilders.webAppContextSetup(wac)
         // .build();
-        Pets manga1 = new Pets(null, "Tarsha", "sdkf", "kdsjfoklom");
+        Pets manga1 = new Pets(null, "Tarsha", "cross", "kdsjfoklom");
         Pets manga2 = new Pets(null, "Tadsfasdfrsha", "asgdgdkf", "kdsjfadsfoklom");
 
         petsList = new ArrayList<>();
         petsList.add(manga1);
         petsList.add(manga2);
 
-//        this.accessToken  = obtainAccessToken("Dinuka", "password");
+        this.accessToken = obtainAccessToken("Dinuka", "password");
     }
 
     @Test
@@ -76,7 +80,17 @@ public class PetsControllerTest {
     }
 
     @Test
-    public void getPetById() {
+    public void getPetById() throws Exception {
+        Mockito.when(petsRepository.findBy_id(ArgumentMatchers.any(ObjectId.class))).thenReturn(petsList.get(0));
+        mockMvc.perform(MockMvcRequestBuilders.get("/pets/id/5c85f361f674acf0b07eb066")
+//                .header(
+//                "Authorization",
+//                "Bearer " + this.accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("Tarsha")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.species", Matchers.is("cross")));
+
     }
 
     @Test
