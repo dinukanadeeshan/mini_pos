@@ -2,6 +2,7 @@ package org.syscolabs.cx.pos.controller;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,5 +26,11 @@ public class PetsController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Pets getPetById(@PathVariable("id") ObjectId id) {
         return repository.findBy_id(id);
+    }
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String savePet(@Validated Pets pet) {
+        System.out.println(pet);
+        return "saved";
     }
 }
