@@ -4,3 +4,7 @@ db.createCollection("order");
 db.createCollection("item");
 
 db.user.insert({ username: 'Dinuka', password: '$2a$04$I9Q2sDc4QGGg5WNTLmsz0.fvGv3OjoZyj81PrSFyGOqMphqfS2qKu' });
+
+db.item.insert({name: 'Veg Burger', unit_price: 60.00, qtyOnStock: 40, status: 'A'});
+
+db.order.insert({total_amount: 120.00, itemList: [], status: 'A'});
