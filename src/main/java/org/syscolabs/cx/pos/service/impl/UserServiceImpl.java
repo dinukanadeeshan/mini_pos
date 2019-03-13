@@ -1,4 +1,4 @@
-package org.syscolabs.cx.pos.service;
+package org.syscolabs.cx.pos.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.syscolabs.cx.pos.model.User;
+import org.syscolabs.cx.pos.dto.model.User;
 import org.syscolabs.cx.pos.repository.UserRepository;
 
 import java.util.Arrays;

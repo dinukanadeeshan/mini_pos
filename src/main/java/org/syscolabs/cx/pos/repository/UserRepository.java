@@ -2,7 +2,7 @@ package org.syscolabs.cx.pos.repository;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.syscolabs.cx.pos.model.User;
+import org.syscolabs.cx.pos.dto.model.User;
 
 public interface UserRepository extends MongoRepository<User, ObjectId> {
     User findByUsername(String username);

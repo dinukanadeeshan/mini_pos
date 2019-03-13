@@ -1,4 +1,4 @@
-package org.syscolabs.cx.pos.model;
+package org.syscolabs.cx.pos.dto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.hateoas.ResourceSupport;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pets {
+public class Pets extends ResourceSupport {
     @Id
     public ObjectId _id;
 
