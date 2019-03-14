@@ -5,11 +5,13 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.syscolabs.cx.pos.dto.model.Order;
 import org.syscolabs.cx.pos.dto.model.OrderItem;
 import org.syscolabs.cx.pos.dto.request.AddNewItemToOrderRequest;
 import org.syscolabs.cx.pos.dto.request.RemoveOrderItemRequest;
 import org.syscolabs.cx.pos.dto.request.UpdateOrderItemQtyRequest;
 import org.syscolabs.cx.pos.dto.response.AddNewSuccessResponse;
+import org.syscolabs.cx.pos.dto.response.GetAllSuccessRespone;
 import org.syscolabs.cx.pos.dto.response.RemoveSuccessResponse;
 import org.syscolabs.cx.pos.dto.response.UpdateSuccessResponse;
 import org.syscolabs.cx.pos.service.OrderService;
@@ -45,13 +47,18 @@ public class OrderController {
                 OrderItem.class.getSimpleName());
     }
 
-    @DeleteMapping(value = "remove/item")
+    @DeleteMapping(value = "remove/item", produces = {"application/hal+json"})
     public RemoveSuccessResponse removeItemFromOrder(@Validated RemoveOrderItemRequest removeOrderItemRequest) {
         ObjectId objectId = orderService.removeItemFromOrder(
                 new OrderItem(removeOrderItemRequest.getOrderId(), removeOrderItemRequest.getItemId())
         );
 
         return new RemoveSuccessResponse(objectId.toHexString());
+    }
+
+    @GetMapping(value = "/", produces = {"application/hal+json"})
+    public GetAllSuccessRespone<Order> viewAllOrders() {
+        return new GetAllSuccessRespone<>(orderService.getAllOrderList(), Order.class.getSimpleName());
     }
 
 

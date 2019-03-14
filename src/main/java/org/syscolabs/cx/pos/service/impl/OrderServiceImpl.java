@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.syscolabs.cx.pos.dto.exception.EmptyItemListException;
 import org.syscolabs.cx.pos.dto.exception.NoItemFoundInOrder;
 import org.syscolabs.cx.pos.dto.exception.OrderNotFoundException;
+import org.syscolabs.cx.pos.dto.exception.NullOrderListException;
 import org.syscolabs.cx.pos.dto.model.Order;
 import org.syscolabs.cx.pos.dto.model.OrderItem;
 import org.syscolabs.cx.pos.repository.OrderRepository;
@@ -73,5 +74,19 @@ public class OrderServiceImpl implements OrderService {
         order.setItemList(itemList);
 
         return orderRepository.save(order).get_id();
+    }
+
+    @Override
+    public List<Order> getAllOrderList() {
+        List<Order> orderList = orderRepository.findAll();
+
+        if (orderList == null) throw new NullOrderListException();
+
+        orderList.stream().forEach(order -> {
+            order.setOrderId(order.get_id().toHexString());
+            order.set_id(null);
+        });
+
+        return orderList;
     }
 }
