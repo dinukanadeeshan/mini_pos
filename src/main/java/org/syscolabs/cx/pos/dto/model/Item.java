@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 @AllArgsConstructor
 public class Item {
     private ObjectId _id;
+    private String itemId;
     private String name;
     private double unit_price;
     private int qtyOnStock;
