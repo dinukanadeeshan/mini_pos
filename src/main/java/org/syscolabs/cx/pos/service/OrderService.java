@@ -7,4 +7,6 @@ public interface OrderService {
     ObjectId addNewItem(OrderItem orderItem);
 
     ObjectId updateItemQty(OrderItem orderItem);
+
+    ObjectId removeItemFromOrder(OrderItem orderItem);
 }

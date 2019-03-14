@@ -78,7 +78,8 @@ public class OrderControllerTest {
                         "Authorization",
                         "Bearer " + this.accessToken).params(params)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
     }
 
     @Test
