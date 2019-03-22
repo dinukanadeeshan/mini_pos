@@ -17,6 +17,11 @@ public class Order {
     private double total_amount;
     private List<OrderItem> itemList;
     private String status;
+    public String orderId;
+    private String orderDate;
+    private String orderTime;
+
+
 
     public Order() {
         this.itemList = new ArrayList<>();

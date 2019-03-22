@@ -24,9 +24,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.syscolabs.cx.pos.SyscoPosApplication;
 import org.syscolabs.cx.pos.dto.model.Order;
+import org.syscolabs.cx.pos.dto.model.OrderItem;
 import org.syscolabs.cx.pos.repository.OrderRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -50,7 +52,9 @@ public class OrderControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();// Standalone context
         this.accessToken = obtainAccessToken("Dinuka", "password");
         this.order = new Order();
-        this.order.setItemList(new ArrayList<>());
+        ArrayList<OrderItem> list = new ArrayList<>();
+        list.add(new OrderItem("5c87ab5db4b2fb629c1b3ef2", "5c87aaaab4b2fb629c1b3ef1"));
+        this.order.setItemList(list);
         this.order.setTotal_amount(120.00);
         this.order.set_id(new ObjectId("5c87ab5db4b2fb629c1b3ef2"));
     }
@@ -142,6 +146,27 @@ public class OrderControllerTest {
                         "Bearer " + this.accessToken).params(params)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getAllOrders() throws Exception {
+        List<Order> orderList = new ArrayList<>();
+        Order o = new Order();
+        o.set_id(new ObjectId("5c89de72640eaa5a0e7e5442"));
+        orderList.add(o);
+
+        when(orderRepository.findAll()).thenReturn(orderList);
+
+        ResultActions orderResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/order/")
+                .header(
+                        "Authorization",
+                        "Bearer " + this.accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        JacksonJsonParser jsonParser = new JacksonJsonParser();
+        System.out.println(jsonParser.parseMap(orderResult.andReturn().getResponse().getContentAsString()));
+
     }
 
 

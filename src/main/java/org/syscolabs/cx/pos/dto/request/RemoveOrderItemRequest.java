@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.ResourceSupport;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,8 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddNewItemToOrderRequest extends ResourceSupport {
-
+public class RemoveOrderItemRequest {
     @NotNull(message = "Order Id cannot be null")
     @NotBlank(message = "Order Id cannot be blank")
     private String orderId;
@@ -22,10 +20,4 @@ public class AddNewItemToOrderRequest extends ResourceSupport {
     @NotNull(message = "Item Id cannot be null")
     @NotBlank(message = "Item Id cannot be blank")
     private String itemId;
-
-    private double unitPrice;
-
-    private int qty;
-
-    private String itemName;
 }

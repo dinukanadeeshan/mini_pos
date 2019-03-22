@@ -1,12 +1,10 @@
 package org.syscolabs.cx.pos.controller;
 
-import org.bson.types.ObjectId;
-import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,77 +23,93 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.syscolabs.cx.pos.SyscoPosApplication;
-import org.syscolabs.cx.pos.repository.PetsRepository;
-import org.syscolabs.cx.pos.dto.model.Pets;
+import org.syscolabs.cx.pos.dto.model.Item;
+import org.syscolabs.cx.pos.service.ItemService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.when;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SyscoPosApplication.class)
 @WebAppConfiguration
-public class PetsControllerTest {
+public class ItemControllerTest {
 
-    MockMvc mockMvc;
-
-    List<Pets> petsList;
-
-    String accessToken;
     @MockBean
-    PetsRepository petsRepository;
+    private ItemService itemService;
+
+    private MockMvc mockMvc;
+    private String accessToken;
     @Autowired
     private WebApplicationContext wac;
-
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
-    //    @Before
-    public void setup() throws Exception {
 
+    private List<Item> itemList;
 
+    @Before
+    public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();// Standalone context
-        // mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-        // .build();
-        Pets manga1 = new Pets(null, "Tarsha", "cross", "kdsjfoklom");
-        Pets manga2 = new Pets(null, "Tadsfasdfrsha", "asgdgdkf", "kdsjfadsfoklom");
-
-        petsList = new ArrayList<>();
-        petsList.add(manga1);
-        petsList.add(manga2);
-
         this.accessToken = obtainAccessToken("Dinuka", "password");
+        this.itemList = new ArrayList<>();
+        Item i = new Item();
+        i.setItemId("5c87aaaab4b2fb629c1b3ef1");
+        i.setName("Veg Burger");
+        i.setQtyOnStock(10);
+        i.setUnit_price(120.00);
+        i.setStatus("A");
+        this.itemList.add(i);
+        i = new Item();
+        i.setItemId("5c88f8086758596f7b3419d2");
+        i.setName("Fried Rice Veg");
+        i.setQtyOnStock(18);
+        i.setUnit_price(150.00);
+        i.setStatus("A");
+        this.itemList.add(i);
     }
 
-    //    @Test
-    public void getAllPets() throws Exception {
-        // Mocking service
-        Mockito.when(petsRepository.findAll()).thenReturn(petsList);
-        mockMvc.perform(MockMvcRequestBuilders.get("/pets/").header(
-                "Authorization",
-                "Bearer " + this.accessToken).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("Tarsha")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("Tadsfasdfrsha")));
-
+    @After
+    public void tearDown() throws Exception {
     }
 
-    //    @Test
-    public void getPetById() throws Exception {
-        Mockito.when(petsRepository.findBy_id(ArgumentMatchers.any(ObjectId.class))).thenReturn(petsList.get(0));
-        mockMvc.perform(MockMvcRequestBuilders.get("/pets/id/5c85f361f674acf0b07eb066")
-//                .header(
-//                "Authorization",
-//                "Bearer " + this.accessToken)
+    @Test
+    public void getAllItems() throws Exception {
+        when(itemService.getAllItems()).thenReturn(itemList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/item/")
+                .header(
+                        "Authorization",
+                        "Bearer " + this.accessToken)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("Tarsha")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.species", Matchers.is("cross")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.list[0].itemId")
+                        .value("5c87aaaab4b2fb629c1b3ef1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.list[1].itemId")
+                        .value("5c88f8086758596f7b3419d2"));
+
 
     }
 
     @Test
-    public void savePet() {
+    public void getAllItemsWhenItemListEmpty() throws Exception {
+        itemList = new ArrayList<>();
+        when(itemService.getAllItems()).thenReturn(itemList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/item/")
+                .header(
+                        "Authorization",
+                        "Bearer " + this.accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content.list").isEmpty());
+
+
     }
+
 
     private String obtainAccessToken(String username, String password) throws Exception {
 
