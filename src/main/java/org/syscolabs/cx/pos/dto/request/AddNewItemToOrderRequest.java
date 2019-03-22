@@ -26,4 +26,6 @@ public class AddNewItemToOrderRequest extends ResourceSupport {
     private double unitPrice;
 
     private int qty;
+
+    private String itemName;
 }

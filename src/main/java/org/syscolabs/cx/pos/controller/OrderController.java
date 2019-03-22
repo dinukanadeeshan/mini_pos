@@ -31,6 +31,7 @@ public class OrderController {
         orderItem.setOrderId(addNewItemToOrderRequest.getOrderId());
         orderItem.setQty(addNewItemToOrderRequest.getQty());
         orderItem.setUnit_price(addNewItemToOrderRequest.getUnitPrice());
+        orderItem.setItemName(addNewItemToOrderRequest.getItemName());
         ObjectId objectId = orderService.addNewItem(orderItem);
         System.out.println(objectId.toHexString());
         return new AddNewSuccessResponse(objectId.toHexString(), OrderItem.class.getSimpleName());

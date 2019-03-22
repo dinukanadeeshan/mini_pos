@@ -18,6 +18,10 @@ public class Order {
     private List<OrderItem> itemList;
     private String status;
     public String orderId;
+    private String orderDate;
+    private String orderTime;
+
+
 
     public Order() {
         this.itemList = new ArrayList<>();
