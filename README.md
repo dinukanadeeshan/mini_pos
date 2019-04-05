@@ -1,0 +1,3 @@
+This project was mini project for POS system in ....
+
+> API Documentation : [Click here](https://app.swaggerhub.com/apis/dinukanadeeshan/POS/1.0.0)
