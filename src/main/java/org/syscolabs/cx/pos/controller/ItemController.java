@@ -22,7 +22,7 @@ public class ItemController {
 
     @GetMapping(value = "/test", produces = {"application/hal+json"})
     public String testAPI() {
-        return "app works without db";
+        return "{\"data\": \"app works without db\"}";
     }
 
 }
