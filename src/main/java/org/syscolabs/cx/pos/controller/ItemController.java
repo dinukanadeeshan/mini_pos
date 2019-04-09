@@ -20,4 +20,9 @@ public class ItemController {
         return new GetAllSuccessRespone<>(itemService.getAllItems(), Item.class.getSimpleName());
     }
 
+    @GetMapping(value = "/test", produces = {"application/hal+json"})
+    public String testAPI() {
+        return "app works without db";
+    }
+
 }
